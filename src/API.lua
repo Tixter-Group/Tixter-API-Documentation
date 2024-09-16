@@ -1,27 +1,24 @@
---[[ 
-    Main API ModuleScript
-
-    This module provides functionality for managing "PassengerDoor" models within a "Doors" model.
-    It includes methods for automatically opening and closing doors with customizable tween animations.
-
-    The API is structured to handle a hierarchy where:
-    - The "Doors" model contains multiple "PassengerDoor" models.
-    - Each "PassengerDoor" model contains two sub-models: "LeftPassengerDoor" and "RightPassengerDoor".
-]]
-
 local TweenService = game:GetService("TweenService")
 
 --[=[
-    @within API
+    @class API
+    The main API module for managing door animations.
 
+    This API provides methods for opening and closing doors with customizable tween animations.
+]=]
+local API = {}
+
+--[=[
+    @function createTween
+    @within API
     Creates a tween for a part's position.
 
-    @param part BasePart The part to tween.
-    @param goalPosition Vector3 The target position of the part.
-    @param duration number The duration of the tween in seconds.
-    @param easingStyle Enum.EasingStyle The easing style for the tween.
-    @param easingDirection Enum.EasingDirection The easing direction for the tween.
-    @return Tween The created Tween instance.
+    @param part BasePart -- The part to tween.
+    @param goalPosition Vector3 -- The target position of the part.
+    @param duration number -- The duration of the tween in seconds.
+    @param easingStyle Enum.EasingStyle -- The easing style for the tween.
+    @param easingDirection Enum.EasingDirection -- The easing direction for the tween.
+    @return Tween -- The created Tween instance.
 ]=]
 local function createTween(part: BasePart, goalPosition: Vector3, duration: number, easingStyle: Enum.EasingStyle, easingDirection: Enum.EasingDirection): Tween
     local tweenInfo = TweenInfo.new(
@@ -41,8 +38,8 @@ local function createTween(part: BasePart, goalPosition: Vector3, duration: numb
 end
 
 --[=[
+    @function moveModel
     @within API
-
     Moves the entire model with specified easing style and duration.
 
     @param model Model The model containing the parts to tween.
@@ -73,16 +70,20 @@ local function moveModel(model: Model, displacement: Vector3, duration: number, 
     return tweens
 end
 
--- API Module
-local API = {}
+--[=[
+    @class PassengerDoor
+    A class for handling operations related to passenger doors.
+
+    This class includes methods for automatically opening and closing passenger doors with customizable animations.
+]=]
 
 -- PassengerDoor Section
 API.PassengerDoor = {}
 API.PassengerDoor.__index = API.PassengerDoor
 
 --[=[
-    @within API.PassengerDoor
-
+    @function AutomaticOpen
+    @within PassengerDoor
     Opens the doors with a specified duration.
 
     @param doorsModel Model The model containing all PassengerDoor models.
@@ -119,14 +120,13 @@ function API.PassengerDoor:AutomaticOpen(doorsModel: Model, openDuration: number
 end
 
 --[=[
-    @within API.PassengerDoor
-
+    @function AutomaticClose
+    @within PassengerDoor
     Closes the doors with a random duration.
 
     @param doorsModel Model The model containing all PassengerDoor models.
 ]=]
-function API.PassengerDoor:Close(doorsModel: Model)
-    -- Iterate over each PassengerDoor model inside the Doors model
+function API.PassengerDoor:AutomaticClose(doorsModel: Model)
     for _, passengerDoor in pairs(doorsModel:GetChildren()) do
         if passengerDoor:IsA("Model") and passengerDoor.Name == "PassengerDoor" then
             local leftDoorModel = passengerDoor:FindFirstChild("LeftPassengerDoor")
@@ -139,16 +139,10 @@ function API.PassengerDoor:Close(doorsModel: Model)
 
             local closeDisplacementLeft = Vector3.new(0, 0, -2.6) -- Distance to slide the left door closed
             local closeDisplacementRight = Vector3.new(0, 0, 2.6) -- Distance to slide the right door closed
-            local minCloseDuration = 3 -- Minimum duration for closing
-            local maxCloseDuration = 6 -- Maximum duration for closing
-
-            -- Generate random durations for closing
-            local closeDurationLeft = math.random() * (maxCloseDuration - minCloseDuration) + minCloseDuration
-            local closeDurationRight = math.random() * (maxCloseDuration - minCloseDuration) + minCloseDuration
 
             -- Move the entire models with sliding effect for closing
-            local closeTweensLeft = moveModel(leftDoorModel, closeDisplacementLeft, closeDurationLeft, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-            local closeTweensRight = moveModel(rightDoorModel, closeDisplacementRight, closeDurationRight, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+            local closeTweensLeft = moveModel(leftDoorModel, closeDisplacementLeft, math.random(2, 4), Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
+            local closeTweensRight = moveModel(rightDoorModel, closeDisplacementRight, math.random(2, 4), Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
 
             -- Play the close tweens
             for _, tween in pairs(closeTweensLeft) do
