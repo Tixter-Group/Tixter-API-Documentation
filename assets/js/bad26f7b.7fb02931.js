@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[545],{88303:s=>{s.exports=JSON.parse('{"name":"docusaurus-plugin-moonwave","id":"moonwave"}')}}]);
