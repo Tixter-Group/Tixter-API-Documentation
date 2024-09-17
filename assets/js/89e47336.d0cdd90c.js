@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[126],{63891:e=>{e.exports=JSON.parse('{"sourceUrl":"https://github.com/xKaelyn/Tixter-API--ROBLOX-/blob/master","baseUrl":"/Tixter-API--ROBLOX-/","classOrder":[],"apiCategories":[]}')}}]);
